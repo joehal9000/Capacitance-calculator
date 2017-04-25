@@ -1,7 +1,7 @@
 from Tkinter import *
 # import testing
 from Capictor import *
-
+from Node import *
 
 
 
@@ -15,17 +15,21 @@ class GUI:
         self.calculatefun = Button(root, text="Calc")
         self.changeB = Button(root, text="Change")
         self.clearB = Button(root, text="CLEAR")
+        self.moveB = Button(root, text="MOVE")
         # pack
         self.addSeries.pack()
         self.calculatefun.pack()
         self.changeB.pack()
         self.clearB.pack()
+        self.moveB.pack()
 
         # Bind
         self.calculatefun.bind("<Button-1>", lambda event: printCap(event, listNode[0]))
         self.addSeries.bind("<Button-1>", lambda event: addB(event, listNode[len(listNode) - 1]))
         self.changeB.bind("<Button-1>", self.change)
         self.clearB.bind("<Button-1>", lambda event: clearNode(event, listNode[0]))
+        self.moveB.bind("<Button-1>", self.move_to_node)
+
         self.S = Scrollbar(root, orient=HORIZONTAL)
         self.T = Text(root)
         self.T.pack(side=RIGHT, fill=Y)
@@ -52,6 +56,19 @@ class GUI:
         else:
             self.addSeries.configure(text="ADD Series")
             self.addSeries.bind("<Button-1>", lambda event: addB(event, listNode[len(listNode) - 1]))
+        self.variable = not self.variable
+
+    def move_to_node(self, event):
+        print("move")
+        del listNode[len(listNode)-1]
+        if self.variable:
+            self.addSeries.configure(text="ADD Parallel")
+            self.addSeries.bind("<Button-1>", lambda event: addP(event, listNode[len(listNode) - 1]))
+        # Changing from  Parallel to Series
+        else:
+            self.addSeries.configure(text="ADD Series")
+            self.addSeries.bind("<Button-1>", lambda event: addB(event, listNode[len(listNode) - 1]))
+        self.variable = not self.variable
         self.variable = not self.variable
 
 
