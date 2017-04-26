@@ -16,6 +16,11 @@ class GUI:
         self.moveB = Button(root, text="MOVE", width=10)
         self.branchB = Button(root, text="Series on Branch", state=DISABLED)
         self.num_value = Entry(root, width=30)
+        # Drop Down
+        self.drop_down_var = StringVar(root)
+        options = {'mF', 'nF', "\xce\xbcF", 'F'}
+        self.drop_down_var.set('F')
+        self.drop_down = OptionMenu(root, self.drop_down_var, *options)
         # pack
         self.addSeries.grid(row=0, column=0)
         self.calculatefun.grid(row=1, column=0)
@@ -24,7 +29,7 @@ class GUI:
         self.moveB.grid(row=2, column=1, sticky=W)
         self.branchB.grid(row=2, column=1, sticky=E)
         self.num_value.grid(row=0, column=1)
-
+        self.drop_down.grid(row=0, column=2)
         # Bind
         self.calculatefun.bind("<Button-1>", lambda event: printCap(event, listNode[0]))
         self.addSeries.bind("<Button-1>", lambda event: addB(event, listNode[len(listNode) - 1], ))
@@ -120,6 +125,6 @@ def addB(event, node_var):
 listNode = [Node()]
 root = Tk()
 root.style = Style()
-root.style.theme_use("winnative")
+root.style.theme_use("clam")
 b = GUI(root)
 root.mainloop()
