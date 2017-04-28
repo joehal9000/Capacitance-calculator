@@ -1,4 +1,4 @@
-from Capictor import *
+from Capacitor import *
 from Node import *
 from ttk import *
 from CircuitBox import *
@@ -16,11 +16,6 @@ class GUI:
         self.moveB = Button(root, text="MOVE", width=10)
         self.branchB = Button(root, text="Series on Branch", state=DISABLED)
         self.num_value = Entry(root, width=30)
-        # Drop Down
-        self.drop_down_var = StringVar(root)
-        options = {'mF', 'nF', "\xce\xbcF", 'F'}
-        self.drop_down_var.set('F')
-        self.drop_down = OptionMenu(root, self.drop_down_var, *options)
         # pack
         self.addSeries.grid(row=0, column=0)
         self.calculatefun.grid(row=1, column=0)
@@ -29,12 +24,12 @@ class GUI:
         self.moveB.grid(row=2, column=1, sticky=W)
         self.branchB.grid(row=2, column=1, sticky=E)
         self.num_value.grid(row=0, column=1)
-        self.drop_down.grid(row=0, column=2)
+
         # Bind
-        self.calculatefun.bind("<Button-1>", lambda event: printCap(event, listNode[0]))
-        self.addSeries.bind("<Button-1>", lambda event: addB(event, listNode[len(listNode) - 1], ))
+        self.calculatefun.bind("<Button-1>", lambda event: printCap(event, stackNode[0]))
+        self.addSeries.bind("<Button-1>", lambda event: addB(event, stackNode[len(stackNode) - 1], ))
         self.changeB.bind("<Button-1>", self.change)
-        self.clearB.bind("<Button-1>", lambda event: clearNode(event, listNode[0]))
+        self.clearB.bind("<Button-1>", lambda event: clearNode(event, stackNode[0]))
         self.moveB.bind("<Button-1>", self.move_to_node)
 
         self.circuit_box = CircuitBox(root)
@@ -47,28 +42,28 @@ class GUI:
         print("Change")
         # Changing from Series to Parallel
         if self.seriesBool:
-            listNode.append(Node())
-            listNode[0].append_a_node(Node('S', listNode[1]))
+            stackNode.append(Node())
+            stackNode[0].append_a_node(Node('S', stackNode[1]))
             self.addSeries.configure(text="ADD Parallel")
             self.addSeries.bind("<Button-1>",
-                                lambda event: addP(event, listNode[len(listNode) - 1]))  # , int(self.num_value.get())
+                                lambda event: addP(event, stackNode[len(stackNode) - 1]))  # , int(self.num_value.get())
         # Changing from  Parallel to Series
         else:
             self.addSeries.configure(text="ADD Series")
-            self.addSeries.bind("<Button-1>", lambda event: addB(event, listNode[len(listNode) - 1]))
+            self.addSeries.bind("<Button-1>", lambda event: addB(event, stackNode[len(stackNode) - 1]))
         self.seriesBool = not self.seriesBool
 
     def move_to_node(self, event):
         print("move")
-        if len(listNode) > 1:
-            del listNode[len(listNode) - 1]
+        if len(stackNode) > 1:
+            del stackNode[len(stackNode) - 1]
             if self.seriesBool:
                 self.addSeries.configure(text="ADD Parallel")
-                self.addSeries.bind("<Button-1>", lambda event: addP(event, listNode[len(listNode) - 1]))
+                self.addSeries.bind("<Button-1>", lambda event: addP(event, stackNode[len(stackNode) - 1]))
                 # Changing from  Parallel to Series
             else:
                 self.addSeries.configure(text="ADD Series")
-                self.addSeries.bind("<Button-1>", lambda event: addB(event, listNode[len(listNode) - 1]))
+                self.addSeries.bind("<Button-1>", lambda event: addB(event, stackNode[len(stackNode) - 1]))
             self.seriesBool = not self.seriesBool
 
     def get_num(self):
@@ -84,7 +79,7 @@ class GUI:
 
 def clearNode(event, nodeVar):
     nodeVar = Node()
-    listNode[0] = nodeVar
+    stackNode[0] = nodeVar
     print ("CLEAR called")
 
 
@@ -122,7 +117,10 @@ def addB(event, node_var):
 
 
 # MAIN
-listNode = [Node()]
+
+# Acts as a stack
+stackNode = [Node()]
+
 root = Tk()
 root.style = Style()
 root.style.theme_use("clam")
