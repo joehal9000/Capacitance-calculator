@@ -6,6 +6,7 @@ Can calculate the equivalent capacitance of a circuit containing a string of ser
  branches
  
  Clear the entered circuit
+ 
  Prints a series circuit every time one is added
  
  
